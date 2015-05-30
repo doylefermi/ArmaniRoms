@@ -51,10 +51,12 @@ public class MainActivity extends ActionBarActivity {
         prefs=getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
         mTitle=new ArrayList<String>();
         mLink=new ArrayList<String>();
-        gcmcheck();
+        TextView info=(TextView)findViewById(R.id.textView3);
+        gcmcheck(info);
+
+
 
         history();
-
         FragmentManager fragmentManager=getSupportFragmentManager();
         FragmentTransaction transaction;
         transaction=fragmentManager.beginTransaction();
@@ -79,9 +81,7 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -111,12 +111,15 @@ public class MainActivity extends ActionBarActivity {
 
 
     }
-    public static void gcmcheck()
+    public static void gcmcheck(TextView info)
     {
         gcm = GoogleCloudMessaging.getInstance(context);
         regid = getRegistrationId(context);
 
         if (regid=="") {
+            info.setText("You can swipe to dismiss cards. Click on a link to open it. Long press to share. You will " +
+                    "receive notifications when a ROM is available. ");
+
             registerInBackground();
         }
 
