@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,17 +16,19 @@ import android.widget.TextView;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.haard.armaniroms.history_database.DatabaseHelper;
+import com.haard.armaniroms.home.HomeFragment;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
 
 public class MainActivity extends ActionBarActivity {
     static String SENDER_ID = "1019787135827";
@@ -36,19 +41,25 @@ public class MainActivity extends ActionBarActivity {
     public static String msg="";
     public static String history="";
     static final String SERVER_URL = "http://doylefermi.comlu.com/register.php";
+    public static List<String> mTitle;
+    public static List<String> mLink;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         context=this.getApplicationContext();
-        prefs=getSharedPreferences(MainActivity.class.getSimpleName(),Context.MODE_PRIVATE);
-
+        prefs=getSharedPreferences(MainActivity.class.getSimpleName(), Context.MODE_PRIVATE);
+        mTitle=new ArrayList<String>();
+        mLink=new ArrayList<String>();
         gcmcheck();
 
         history();
 
-        TextView body = (TextView)findViewById(R.id.textView);
-        body.setText(history);
+        FragmentManager fragmentManager=getSupportFragmentManager();
+        FragmentTransaction transaction;
+        transaction=fragmentManager.beginTransaction();
+        Fragment f=new HomeFragment();
+        transaction.replace(R.id.test, f).commit();
 
     }
 
@@ -85,8 +96,15 @@ public class MainActivity extends ActionBarActivity {
         while (!AllFriends.isAfterLast()) {
             String id= AllFriends.getString(0);
             String Name = AllFriends.getString(1);
+            String title="Google";
+            String link="www.google.com";
+            if(Name.contains(";")){
+                title=Name.substring(0,Name.indexOf(';'));
+                link=Name.substring(Name.indexOf(';')+1,Name.length());
+            }
             AllFriends.moveToNext();
-            history=history+id+"."+Name+"\n";
+            mTitle.add(title);
+            mLink.add(link);
             Log.w("test", Name + id);
 
         }
@@ -95,14 +113,12 @@ public class MainActivity extends ActionBarActivity {
     }
     public static void gcmcheck()
     {
-        //Toast.makeText(context, fb_id, Toast.LENGTH_SHORT).show();
         gcm = GoogleCloudMessaging.getInstance(context);
         regid = getRegistrationId(context);
 
-        if (regid=="") {    //Toast.makeText(getApplicationContext(), "Registering device...", Toast.LENGTH_SHORT).show();
+        if (regid=="") {
             registerInBackground();
         }
-        //else {Toast.makeText(getApplicationContext(), "Device registered, registration ID=" + regid,Toast.LENGTH_LONG).show(); }
 
     }
 
@@ -112,9 +128,6 @@ public class MainActivity extends ActionBarActivity {
             Log.i(TAG, "Registration not found.");
             return "";
         }
-        // Check if app was updated; setContentView(R.layout.activity_main);if so, it must clear the registration ID
-        // since the existing regID is not guaranteed to work with the new
-        // app version.
         return registrationId;
     }
 

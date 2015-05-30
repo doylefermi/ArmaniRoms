@@ -63,7 +63,8 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
         String link=msg.substring(msg.indexOf(';')+1,msg.length());
         mNotificationManager = (NotificationManager)
                 ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-
+        if(!link.startsWith("http://") && !link.startsWith("https://"))
+            link="http://"+link;
         Intent notificationIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
         PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, notificationIntent, 0);
 
