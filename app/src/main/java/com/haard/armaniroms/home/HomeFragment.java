@@ -39,18 +39,18 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDismissedBySwipeLeft(RecyclerView recyclerView1,int[] reverseSortedPositions){
                 for (int position:reverseSortedPositions){
-                    MainActivity.mTitle.remove(position);
-                    MainActivity.mLink.remove(position);
-                    mAdapter.notifyItemRemoved(position);
+                    MainActivity.mTitle.remove(MainActivity.mTitle.size()-position-1);
+                    MainActivity.mLink.remove(MainActivity.mLink.size()-position-1);
+                    mAdapter.notifyItemRemoved(MainActivity.mLink.size()-position-1);
                 }
                 mAdapter.notifyDataSetChanged();
             }
             @Override
             public void onDismissedBySwipeRight(RecyclerView recyclerView1,int[] reverseSortedPositions){
                 for (int position:reverseSortedPositions){
-                    MainActivity.mTitle.remove(position);
-                    MainActivity.mLink.remove(position);
-                    mAdapter.notifyItemRemoved(position);
+                    MainActivity.mTitle.remove(MainActivity.mTitle.size()-position-1);
+                    MainActivity.mLink.remove(MainActivity.mLink.size()-position-1);
+                    mAdapter.notifyItemRemoved(MainActivity.mLink.size()-position-1);
                 }
                 mAdapter.notifyDataSetChanged();
             }
