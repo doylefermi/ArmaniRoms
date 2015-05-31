@@ -1,0 +1,264 @@
+<?php
+ session_start();
+if(isset($_SESSION["user"]))
+{
+   if($_SESSION["user"]=="admin")
+   	 {
+
+   	 }
+   	 else
+   	 {
+   	 	die("AUTHORIZATION FAILURE");
+   	 }
+}
+else
+{
+	die("AUTHORIZATION FAILURE");
+}
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Send Message</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+	<!--link rel="stylesheet/less" href="less/bootstrap.less" type="text/css" /-->
+	<!--link rel="stylesheet/less" href="less/responsive.less" type="text/css" /-->
+	<!--script src="js/less-1.3.3.min.js"></script-->
+	<!--append ‘#!watch’ to the browser URL, then refresh the page. -->
+	
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+	<link href="toastr/toastr.css" rel="stylesheet"/>
+	
+
+  <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+  <!--[if lt IE 9]>
+    <script src="js/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Fav and touch icons -->
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="img/apple-touch-icon-57-precomposed.png">
+  <link rel="shortcut icon" href="img/favicon.png">
+  
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/scripts.js"></script>
+	<script src="toastr/toastr.js"></script>
+
+  <script type="text/javascript">
+
+
+$(document).ready(function(){
+    $("#parent1").css("display","none");
+        $(".many").click(function(){
+        if ($('input[name=optionsRadios1]:checked').val() == "Many" ) {
+            $("#parent1").slideDown("fast"); //Slide Down Effect
+        } else {
+            $("#parent1").slideUp("fast");  //Slide Up Effect
+        }
+     });
+});
+
+
+
+function doit()
+  {
+
+    toastr["info"]("Connecting to db", "Connecting")
+
+toastr.options = {
+  "closeButton": false,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-top-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "2000",
+  "extendedTimeOut": "100",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
+    var delay1=1000;  //1 second
+    setTimeout(function(){  
+      
+      var xmlhttp;
+
+      if (window.XMLHttpRequest)
+        {// code for IE7+, Firefox, Chrome, Opera, Safari
+          xmlhttp=new XMLHttpRequest();
+        }
+      else
+        {// code for IE6, IE5
+          xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+
+      xmlhttp.open("POST","send.php",true);
+      xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+
+              var content = document.getElementsByName("content");
+              var option1 = document.getElementsByName("optionsRadios1");
+              var option2 =  document.getElementsByName("optionsRadios1");
+              var data = "content="+content[0].value+"&option1="+option1[0].value+"&option2="+option2[0].value; 
+
+      xmlhttp.send(data);
+      xmlhttp.onreadystatechange=function()
+        {
+          if (xmlhttp.readyState==4 && xmlhttp.status==200)
+            {
+                  s2=xmlhttp.responseText;
+                  toastr["success"]("Sending", "Sending Messages")
+
+toastr.options = {
+  "closeButton": false,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-top-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "2000",
+  "extendedTimeOut": "100",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
+}
+      
+                  var delay=1500;//1.5 seconds
+                  
+                  setTimeout(function(){
+                 var d = { responce : s2 };
+                   var r = $.param(d);
+                     window.location.href = "home.html?"+r;
+                      //your code to be executed after 1 seconds
+                    },delay);
+             
+            }  
+        }  
+    },delay1);
+  }
+
+</script> 
+
+</head>
+
+<body>
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-2 column">
+			<img alt="140x140" src="http://lorempixel.com/140/140/">
+		</div>
+		<div class="col-md-10 column">
+			<ul class="nav nav-pills">
+				<li >
+					<a href="home.html">Home</a>
+				</li>
+				<li class="active">
+					<a href="#">Send Message</a>
+				</li>
+				<li class="disabled">
+					<a href="#">Users-List</a>
+				</li>
+				<li class="dropdown pull-right">
+					 <a href="#" data-toggle="dropdown" class="dropdown-toggle">Dropdown<strong class="caret"></strong></a>
+					<ul class="dropdown-menu">
+						<li>
+							<a href="#">Change Password</a>
+						</li>
+						<li>
+							<a href="logout.php">Logout</a>
+						</li>
+						<li class="divider">
+						</li>
+						<li>
+							<a href="#">Separated link</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-md-2 column">
+		</div>
+		<div class="col-md-10 column">
+			<h2>
+				Compose Message
+			</h2>
+			<p>
+				<form >
+					<div class="radio">
+  <label>
+    <input type="radio" name="optionsRadios1" id="optionsRadios1" value="All"  class="many" checked>
+    Send to all registered users&mdash;used in case of general mesages
+  </label>
+</div>
+<div class="radio">
+  <label>
+    <input type="radio" name="optionsRadios1" id="optionsRadios2" value="Many" class="many">
+    Send to specific event
+  </label>
+  <ol id="parent1" class="formset">
+<li><strong>Select event:</strong></li>
+     <select>
+      <?php
+         include_once './GCM/db_functions.php';
+         $db = new DB_Functions();
+                 $event = $db->getevents();
+          
+                       
+            while($ev=mysqli_fetch_assoc($event))
+            {
+            echo "<option value=".$ev["event_id"].">".$ev["event_name"]."</option>";
+          }
+            
+         ?>
+</select> </li>
+</ol>
+</div>
+				  <div class="form-group">
+                  <label for="content">Message Content</label>
+				   <input type="text" class="form-control" id="content" name="content" placeholder="Enter content" >
+       			</div>
+             <button type="button" class="btn btn-default" onClick="doit()">Submit</button>
+				</form>
+			</p>
+			<p>
+				<a >Please donot make the content too long</a>
+			</p>
+		</div>
+	</div>
+	<div class="row clearfix">
+		<div class="col-md-8 column">
+		</div>
+		<div class="col-md-4 column">
+			<h2>
+				Heading
+			</h2>
+			<p>
+				Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui.
+			</p>
+			<p>
+				<a class="btn" href="#">View details »</a>
+			</p>
+		</div>
+	</div>
+</div>
+</body>
+</html>
